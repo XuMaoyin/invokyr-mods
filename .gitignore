@@ -1,0 +1,19 @@
+# Build outputs
+**/bin/
+**/obj/
+
+# Reverse-engineering intermediates (not for public distribution)
+reverse/
+reverse-out/
+tools/
+dump/
+
+# Local diagnostic artifacts
+scan*.txt
+startup_screen.png
+
+# OS / editor
+Thumbs.db
+Desktop.ini
+.DS_Store
+*.user
