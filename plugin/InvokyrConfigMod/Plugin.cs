@@ -26,7 +26,7 @@ namespace InvokyrConfigMod
         {
             ModLog = base.Log;
             base.AddComponent<ConfigUI>();
-            ModLog.LogInfo("[ConfigMod] loaded. Press F8 to open/close the in-game config editor.");
+            ModLog.LogInfo("[ConfigMod] loaded. Press F9 to open/close the in-game config editor.");
         }
     }
 
@@ -165,17 +165,19 @@ namespace InvokyrConfigMod
         private int curTab;
         private bool show;
         private Vector2 scroll;
+        private Vector2 tabScroll;
         private bool scanned;
 
         void OnGUI()
         {
-            // F8 via the IMGUI event stream (works regardless of which input system the game uses).
+            // F9 via the IMGUI event stream (works regardless of which input system the game uses).
+            // F9 was chosen so it doesn't collide with Safe Room Guide / Calypso which both use F8.
             // Toggling then returning immediately: the panel is not drawn this frame, so the layout
             // structure cannot change mid-frame and no "Mismatched LayoutGroup" is raised.
             try
             {
                 var ev = Event.current;
-                if (ev != null && ev.type == EventType.KeyDown && ev.keyCode == KeyCode.F8)
+                if (ev != null && ev.type == EventType.KeyDown && ev.keyCode == KeyCode.F9)
                 {
                     show = !show;
                     return;
@@ -206,7 +208,8 @@ namespace InvokyrConfigMod
                     lang = lang == Lang.Cn ? Lang.En : Lang.Cn;
                 GUILayout.EndHorizontal();
 
-                // Tabs (one per mod)
+                // Tabs (one per mod) — inside a horizontal scroll view so many mods don't overflow
+                tabScroll = GUILayout.BeginScrollView(tabScroll, GUILayout.Height(42));
                 GUILayout.BeginHorizontal();
                 if (tabs.Count == 0)
                 {
@@ -221,6 +224,7 @@ namespace InvokyrConfigMod
                         curTab = i;
                 }
                 GUILayout.EndHorizontal();
+                GUILayout.EndScrollView();
 
                 // Scrollable content for the selected mod
                 GUILayout.Space(4);
